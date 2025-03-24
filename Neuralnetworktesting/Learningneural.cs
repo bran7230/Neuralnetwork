@@ -8,6 +8,7 @@ class Learningneural
     // prediction = x * w
     //loss = Math.Pow(prediction - y, 2)
     //error = prediction - target
+    //Gradient = 2 * hidden * (output - y)
 
     //two layer neural network
     public static void Main()
@@ -19,8 +20,8 @@ class Learningneural
 
         double learningrate = 0.1;
 
-        double h1 = x * w1;
-        double h2 = x * w2;
+        double h1 = x * w1; //hidden neuron 1
+        double h2 = x * w2; //hidden neuron 2
 
 
         double w3 = 0.5;  // hidden1 → output
