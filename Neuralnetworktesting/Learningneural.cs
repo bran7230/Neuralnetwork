@@ -4,11 +4,68 @@
 class Learningneural
 {
     //z = (x1 * w1) + (x2 * w2) + b
-    //o(z) = 1/ 1 + (e^-z)
+    //o(z) or confidence = 1/ 1 + (e^-z)
     // prediction = x * w
     //loss = Math.Pow(prediction - y, 2)
     //error = prediction - target
     //Gradient = 2 * hidden * (output - y)
+
+    //Start of confidence on text
+    public static void Main()
+    {
+        double bias = -0.5;
+        double x1 = 1;
+        double x2 = 1;
+        double x3 = 1;
+
+        double w1 = 0.6;
+        double w2 = 0.7;
+        double w3 = 0.9;
+
+        double z = (x1 * w1) + (x2 * w2) + (x3 * w3) + bias;
+        double confidence = 1 / (1+Math.Exp(-z));
+
+        //adjust x values to play around with this future me
+        if(confidence > 0.9)
+        {
+            Console.WriteLine("Absolutely sure");
+            Console.WriteLine("Confidence: " + confidence);
+
+        }
+
+        else if (confidence > 0.73)
+        {
+            Console.WriteLine("Very sure");
+            Console.WriteLine("Confidence: " + confidence);
+
+        }
+
+        else if(confidence > 0.6)
+        {
+            Console.WriteLine("Pretty sure");
+            Console.WriteLine("Confidence: " + confidence);
+
+        }
+
+        else if(confidence > 0.4)
+        {
+            Console.WriteLine("Uncertain");
+            Console.WriteLine("Confidence: " + confidence);
+
+        }
+
+        else
+        {
+            Console.WriteLine("Not confident");
+            Console.WriteLine("Confidence: " + confidence);
+
+        }
+
+
+    }
+
+
+    /*
 
     //two layer neural network
     public static void Main()
@@ -26,7 +83,7 @@ class Learningneural
 
         double w3 = 0.5;  // hidden1 → output
         double w4 = -0.4; // hidden2 → output
-        double y = 1;//y val
+        double y = 1; //y val
         double output = (h1 * w3) + (h2 * w4);//output for neruons
 
         double w3gradient = 2 * h1 * (output - y);
@@ -46,6 +103,7 @@ class Learningneural
 
     }
 
+    */
 
 
     /*
