@@ -96,6 +96,8 @@ public class Learningneural
         return 1.0 / (1.0 + Math.Exp(-x));
     }
 
+
+    //COOLEST SHIT IVE DONE EVER DOWN BELOW
     /*
     //Start of confidence on text
 
@@ -173,8 +175,9 @@ public class Learningneural
 
     */
 
+
+   //two layer neural network
     /*
-    //two layer neural network
     public static void Main()
     {
         double x = 3;//input value
@@ -213,6 +216,8 @@ public class Learningneural
     
 
     */
+
+    //simple neurons
     /*
         public static void Main()
         {
@@ -234,7 +239,7 @@ public class Learningneural
     */
 
 
-
+    //examples
     /*
     public static void Main()
     {
