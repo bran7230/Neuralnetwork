@@ -1,7 +1,7 @@
 ﻿using System;
+using Newtonsoft.Json;
 
-
-class Learningneural
+public class Learningneural
 {
     //z = (x1 * w1) + (x2 * w2) + b
     //o(z) or confidence = 1/ 1 + (e^-z)
@@ -10,54 +10,75 @@ class Learningneural
     //error = prediction - target
     //Gradient = 2 * hidden * (output - y)
 
+
+
     //Start of confidence on text
+
+    //making it save now
     public static void Main()
     {
-        double bias = -0.5;
-        double x1 = 1;
-        double x2 = 1;
-        double x3 = 1;
+        //inputs
+        double x1 = 2;
+        double x2 = 3;
 
+        //weights
         double w1 = 0.6;
         double w2 = 0.7;
-        double w3 = 0.9;
 
-        double z = (x1 * w1) + (x2 * w2) + (x3 * w3) + bias;
-        double confidence = 1 / (1+Math.Exp(-z));
 
-        //adjust x values to play around with this future me
-        if(confidence > 0.9)
+        double bias = -0.5;
+
+        double learningRate = 0.1;
+
+        //target
+        double y = 1;
+
+
+        for (int i = 0; i < 10000; i++)
         {
-            Console.WriteLine("Absolutely sure");
-            Console.WriteLine("Confidence: " + confidence);
+            //calc for z
+            double z = (x1 * w1) + (x2 * w2) + bias;
+            //confidence
+            double confidence = 1 / (1 + Math.Exp(-z));
+
+            double error = confidence - y;
+
+            //gradient for new weights
+            double gradientW1 = 2 * x1 * (confidence - y);
+            double gradientW2 = 2 * x2 * (confidence - y);
+            //new weight set
+            w1 = w1- (learningRate * gradientW1);
+            w2 = w2- (learningRate * gradientW2);
+
+            Console.WriteLine($"Number: {i}: w1 = {w1:F4}, w2 = {w2:F4}, Confidence = {confidence:F4}, Error = {error:F4}");
 
         }
-
-        else if (confidence > 0.73)
+        //json data saving for model
+        var jsondata = new
         {
-            Console.WriteLine("Very sure");
-            Console.WriteLine("Confidence: " + confidence);
+            Input1 = x1,
+            Input2 = x2,
+            W1 = $"{w1:F4}",
+            W2 = $"{w2:F4}",
+            bias = bias ,
+            learningRate = learningRate ,
+            y = y ,
+        };
+    
 
-        }
+        //new weights
+        Console.WriteLine($"New weight W1: {w1:F4} ");
+        Console.WriteLine($"New weight W2: {w2:F4}");  
 
-        else if(confidence > 0.6)
+        //making it a json file
+        string json = JsonConvert.SerializeObject(jsondata, Formatting.Indented);
+
+        string filePath = "C:\\Users\\brand\\OneDrive\\Desktop\\Neuralnetworktesting\\Neuralnetworktesting\\Firstmodel.json";
+        using (var stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+        using (var writer = new StreamWriter(stream))
         {
-            Console.WriteLine("Pretty sure");
-            Console.WriteLine("Confidence: " + confidence);
 
-        }
-
-        else if(confidence > 0.4)
-        {
-            Console.WriteLine("Uncertain");
-            Console.WriteLine("Confidence: " + confidence);
-
-        }
-
-        else
-        {
-            Console.WriteLine("Not confident");
-            Console.WriteLine("Confidence: " + confidence);
+            writer.Write(json);
 
         }
 
@@ -65,8 +86,8 @@ class Learningneural
     }
 
 
-    /*
 
+    /*
     //two layer neural network
     public static void Main()
     {
@@ -103,9 +124,9 @@ class Learningneural
 
     }
 
+    
+
     */
-
-
     /*
         public static void Main()
         {
