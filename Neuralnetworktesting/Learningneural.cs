@@ -9,9 +9,94 @@ public class Learningneural
     //loss = Math.Pow(prediction - y, 2)
     //error = prediction - target
     //Gradient = 2 * hidden * (output - y)
+    /*// === Activation Function ===
+    double Sigmoid(double x)
+    {
+        return 1.0 / (1.0 + Math.Exp(-x));
+    }
+
+    // === Forward Pass (Equations) ===
+    // Hidden neuron
+    double zh = (x1 * w1h) + (x2 * w2h) + bh;
+    double h  = Sigmoid(zh);
+
+    // Output neuron
+    double zo      = (h * who) + bo;
+    double output  = Sigmoid(zo);
+
+    // === Loss (Mean Squared Error, for example) ===
+    double error   = output - target;  // or (output - y)
+    double loss    = 0.5 * error * error;
+
+    // === Backpropagation (Chain Rule) ===
+    // 1) For the output neuron
+    double dLoss_dOut = (output - target);          // ∂Loss/∂output
+    double dOut_dZo   = output * (1.0 - output);    // ∂output/∂zo (sigmoid derivative)
+    double dLoss_dZo  = dLoss_dOut * dOut_dZo;      // chain them
+
+    // Derivative w.r.t. who
+    double dZo_dWho   = h;                          // ∂zo/∂who
+    double dLoss_dWho = dLoss_dZo * dZo_dWho;       // ∂Loss/∂who
+
+    // Derivative w.r.t. bo
+    double dZo_dBo    = 1.0;                       
+    double dLoss_dBo  = dLoss_dZo * dZo_dBo;        // ∂Loss/∂bo
+
+    // 2) For the hidden neuron
+    //   We first see how much the hidden neuron contributed to error
+    double dLoss_dH   = dLoss_dZo * who;            // ∂Loss/∂h
+    double dH_dZh     = h * (1.0 - h);              // ∂h/∂zh (sigmoid derivative)
+    double dLoss_dZh  = dLoss_dH * dH_dZh;          // chain them
+
+    // Derivative w.r.t. w1h
+    double dZh_dw1h   = x1;                        
+    double dLoss_dw1h = dLoss_dZh * dZh_dw1h;       // ∂Loss/∂w1h
+
+    // Derivative w.r.t. w2h
+    double dZh_dw2h   = x2;
+    double dLoss_dw2h = dLoss_dZh * dZh_dw2h;       // ∂Loss/∂w2h
+
+    // Derivative w.r.t. bh
+    double dZh_dBh    = 1.0;
+    double dLoss_dBh  = dLoss_dZh * dZh_dBh;        // ∂Loss/∂bh
+
+    // === Weight Updates (Gradient Descent) ===
+    w1h = w1h - learningRate * dLoss_dw1h;
+    w2h = w2h - learningRate * dLoss_dw2h;
+    bh  = bh  - learningRate * dLoss_dBh;
+    who = who - learningRate * dLoss_dWho;
+    bo  = bo  - learningRate * dLoss_dBo;
+    */
 
 
 
+    //start of machine learning:
+    public static void Main()
+    {
+        double x1 = 1;
+        double x2 = 0;
+        double y = 1;
+
+        double w1h = 0.4;
+        double w2h = 0.3;
+        double who = 0.5;
+
+        double bh = 0.1;
+        double bo = 0.0;
+
+        double zh = (x1 * w1h) + (x2 * w2h) + bh;
+        double h = Sigmoid(zh);
+
+        Console.WriteLine("Z: " + zh);
+        Console.WriteLine("Sigmoid: " + h);
+    }
+ 
+    public static double Sigmoid(double x)
+    {
+        return 1.0 / (1.0 + Math.Exp(-x));
+    }
+
+    /*
     //Start of confidence on text
 
     //making it save now
@@ -30,7 +115,7 @@ public class Learningneural
 
         double learningRate = 0.1;
 
-        //target
+        //target output
         double y = 1;
 
 
@@ -53,9 +138,11 @@ public class Learningneural
             Console.WriteLine($"Number: {i}: w1 = {w1:F4}, w2 = {w2:F4}, Confidence = {confidence:F4}, Error = {error:F4}");
 
         }
-        //json data saving for model
+
+        //json data to save for my model
         var jsondata = new
         {
+
             Input1 = x1,
             Input2 = x2,
             W1 = $"{w1:F4}",
@@ -63,6 +150,7 @@ public class Learningneural
             bias = bias ,
             learningRate = learningRate ,
             y = y ,
+
         };
     
 
@@ -74,18 +162,16 @@ public class Learningneural
         string json = JsonConvert.SerializeObject(jsondata, Formatting.Indented);
 
         string filePath = "C:\\Users\\brand\\OneDrive\\Desktop\\Neuralnetworktesting\\Neuralnetworktesting\\Firstmodel.json";
+
         using (var stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+
         using (var writer = new StreamWriter(stream))
         {
-
             writer.Write(json);
-
         }
-
-
     }
 
-
+    */
 
     /*
     //two layer neural network
