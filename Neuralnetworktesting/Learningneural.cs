@@ -15,57 +15,45 @@ public class Learningneural
         return 1.0 / (1.0 + Math.Exp(-x));
     }
 
-    // === Forward Pass (Equations) ===
+    // === Forward Pass ===
+
     // Hidden neuron
-    double zh = (x1 * w1h) + (x2 * w2h) + bh;
-    double h  = Sigmoid(zh);
+    double hiddenInput = (input1 * weightInput1ToHidden) + (input2 * weightInput2ToHidden) + hiddenBias;
+    double hiddenOutput = Sigmoid(hiddenInput);
 
     // Output neuron
-    double zo      = (h * who) + bo;
-    double output  = Sigmoid(zo);
+    double outputInput = (hiddenOutput * weightHiddenToOutput) + outputBias;
+    double predictedOutput = Sigmoid(outputInput);
 
-    // === Loss (Mean Squared Error, for example) ===
-    double error   = output - target;  // or (output - y)
-    double loss    = 0.5 * error * error;
+    // === Loss ===
+    double error = predictedOutput - targetOutput;
+    double loss = 0.5 * error * error;
 
-    // === Backpropagation (Chain Rule) ===
-    // 1) For the output neuron
-    double dLoss_dOut = (output - target);          // ∂Loss/∂output
-    double dOut_dZo   = output * (1.0 - output);    // ∂output/∂zo (sigmoid derivative)
-    double dLoss_dZo  = dLoss_dOut * dOut_dZo;      // chain them
+    // === Backpropagation ===
+    // Output neuron derivatives
+    double dError_dPredicted = predictedOutput - targetOutput;
+    double dPredicted_dOutputInput = predictedOutput * (1 - predictedOutput);
+    double dLoss_dOutputInput = dError_dPredicted * dPredicted_dOutputInput;
 
-    // Derivative w.r.t. who
-    double dZo_dWho   = h;                          // ∂zo/∂who
-    double dLoss_dWho = dLoss_dZo * dZo_dWho;       // ∂Loss/∂who
+    double dLoss_dWeightHiddenToOutput = dLoss_dOutputInput * hiddenOutput;
+    double dLoss_dOutputBias = dLoss_dOutputInput * 1;
 
-    // Derivative w.r.t. bo
-    double dZo_dBo    = 1.0;                       
-    double dLoss_dBo  = dLoss_dZo * dZo_dBo;        // ∂Loss/∂bo
+    // Hidden neuron derivatives
+    double dLoss_dHiddenOutput = dLoss_dOutputInput * weightHiddenToOutput;
+    double dHiddenOutput_dHiddenInput = hiddenOutput * (1 - hiddenOutput);
+    double dLoss_dHiddenInput = dLoss_dHiddenOutput * dHiddenOutput_dHiddenInput;
 
-    // 2) For the hidden neuron
-    //   We first see how much the hidden neuron contributed to error
-    double dLoss_dH   = dLoss_dZo * who;            // ∂Loss/∂h
-    double dH_dZh     = h * (1.0 - h);              // ∂h/∂zh (sigmoid derivative)
-    double dLoss_dZh  = dLoss_dH * dH_dZh;          // chain them
+    double dLoss_dWeightInput1ToHidden = dLoss_dHiddenInput * input1;
+    double dLoss_dWeightInput2ToHidden = dLoss_dHiddenInput * input2;
+    double dLoss_dHiddenBias = dLoss_dHiddenInput * 1;
 
-    // Derivative w.r.t. w1h
-    double dZh_dw1h   = x1;                        
-    double dLoss_dw1h = dLoss_dZh * dZh_dw1h;       // ∂Loss/∂w1h
+    // === Weight Updates ===
+    weightInput1ToHidden -= learningRate * dLoss_dWeightInput1ToHidden;
+    weightInput2ToHidden -= learningRate * dLoss_dWeightInput2ToHidden;
+    hiddenBias           -= learningRate * dLoss_dHiddenBias;
+    weightHiddenToOutput -= learningRate * dLoss_dWeightHiddenToOutput;
+    outputBias           -= learningRate * dLoss_dOutputBias;
 
-    // Derivative w.r.t. w2h
-    double dZh_dw2h   = x2;
-    double dLoss_dw2h = dLoss_dZh * dZh_dw2h;       // ∂Loss/∂w2h
-
-    // Derivative w.r.t. bh
-    double dZh_dBh    = 1.0;
-    double dLoss_dBh  = dLoss_dZh * dZh_dBh;        // ∂Loss/∂bh
-
-    // === Weight Updates (Gradient Descent) ===
-    w1h = w1h - learningRate * dLoss_dw1h;
-    w2h = w2h - learningRate * dLoss_dw2h;
-    bh  = bh  - learningRate * dLoss_dBh;
-    who = who - learningRate * dLoss_dWho;
-    bo  = bo  - learningRate * dLoss_dBo;
     */
 
 
@@ -77,18 +65,38 @@ public class Learningneural
         double x2 = 0;
         double y = 1;
 
-        double w1h = 0.4;
-        double w2h = 0.3;
-        double who = 0.5;
+        double w1h = 0.4; //weight input 1 hidden
+        double w2h = 0.3;//weight input 2 hidden
+        double who = 0.5; //hidden output weight
 
-        double bh = 0.1;
-        double bo = 0.0;
+        double bh = 0.1; // hidden bias
+        double bo = 0.0; // output bias
 
-        double zh = (x1 * w1h) + (x2 * w2h) + bh;
-        double h = Sigmoid(zh);
+        double hiddenInput = (x1 * w1h) + (x2 * w2h) + bh;
+        double hiddenOutput = Sigmoid(hiddenInput);
 
-        Console.WriteLine("Z: " + zh);
-        Console.WriteLine("Sigmoid: " + h);
+        double outputInput = (hiddenOutput * who) + bo; 
+        
+        double prediction = Sigmoid(outputInput);
+
+        double error = prediction - y;
+
+        double deltaOut = error * (prediction * (1 - prediction));
+
+        double learningRate = 0.1;
+
+   
+        
+        Console.WriteLine("Z: " + hiddenInput);
+        Console.WriteLine("Output input: " + outputInput);
+        Console.WriteLine("Prediction: "+prediction);
+        Console.WriteLine("Error: "+error);
+        Console.WriteLine("Delta: " + deltaOut);
+
+        double gradient_who = deltaOut * hiddenOutput;  // (gradient) for who
+
+        who = who - (learningRate * gradient_who); 
+        Console.WriteLine("New Who: " + who);
     }
  
     public static double Sigmoid(double x)
