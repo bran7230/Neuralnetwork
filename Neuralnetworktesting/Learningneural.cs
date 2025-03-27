@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics.Tracing;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
 public class Learningneural
@@ -57,7 +59,264 @@ public class Learningneural
     */
 
 
+    
+    /*
+    Simple Intent Classifier - Neural Network (C#)
 
+    This program simulates a basic neural network with multiple outputs (greet, code, help).
+    It performs:
+    - Bag-of-words input processing (e.g., "hello", "code", "help")
+    - Forward pass with weighted inputs and sigmoid activation
+    - Intent confidence calculation for each output neuron
+    - Error and delta (gradient signal) computation using backpropagation
+    - Weight update for the active input's intent
+
+    Example:
+    Input: "hello"
+    Output: Increases confidence in the "greet" intent by adjusting its weight.
+
+    This is a foundational model for building an intelligent chatbot or intent recognition system.
+
+    // add a * / below to run it
+    */
+
+    /*
+    public static void Main()
+    {
+        //base values for false.
+        double greetingInput = 0;
+        double codeInput = 0;
+        double helpInput = 0;
+        List<string> words = new List<string> { "hello", "code", "help", "please", "bye" };
+        Console.WriteLine("Hello: ");
+        string input = Console.ReadLine().ToLower();
+
+        //input checks
+        if (input == null)
+        {
+            Console.WriteLine("Enter valid..");
+            return;
+        }
+
+        else if (input == "hello")
+        {
+            greetingInput = 2;
+        }
+
+        else if (input == "code")
+        {
+            codeInput = 2;
+        }
+
+        else if (input == "help")
+        {
+
+            helpInput = 2;
+        }
+        //default weight
+        double greetingWeight = 1.0;
+        double codeWeight = 1.0;
+        double helpWeight = 1.0;
+
+        double bias = 1.0;
+        //for new weights
+        double learningRate = 0.1;
+        
+        //z
+        double greetz = (greetingInput * greetingWeight) + bias;
+        double codez = (codeInput * codeWeight) + bias;
+        double helpz = (helpInput * helpWeight) + bias;
+
+        Console.WriteLine("Greeting z: "+greetz);
+        Console.WriteLine("Code z: "+codez);
+        Console.WriteLine("Help z: "+helpz);
+
+        //confidences
+        double greetConfidence = Sigmoid(greetz);
+        double codeConfidence = Sigmoid(codez);
+        double helpConfidence = Sigmoid(helpz);
+
+        Console.WriteLine("Greet confidence: "+greetConfidence);
+        Console.WriteLine("Code confidence: "+codeConfidence);
+        Console.WriteLine("Help confidence: "+helpConfidence);
+
+        //if its above, print.
+       if(greetConfidence > 0.8)
+        {
+            Console.WriteLine("\nHello\n");
+        }
+
+       else if(codeConfidence > 0.8)
+        {
+            Console.WriteLine("\n Enter Code: \n ");
+        }
+
+        else if(helpConfidence > 0.8)
+        {
+            Console.WriteLine("\n What do you need help with?\n");
+        }
+
+       //error margins
+        double greetError = greetConfidence - 1;
+        double codeError = codeConfidence - 1;
+        double helpError = helpConfidence - 1;
+
+        Console.WriteLine("Greet error: "+greetError);
+        Console.WriteLine("Code error: "+codeError);
+        Console.WriteLine("Help error: "+helpError);
+
+        //deltas for it
+        double greetDelta = greetError * greetConfidence * (1-greetConfidence);
+        double codeDelta = codeError * codeConfidence * (1-codeConfidence);
+        double helpDelta = helpError * helpConfidence * (1-helpConfidence);
+
+        Console.WriteLine("Greet delta: "+greetDelta);
+        Console.WriteLine("Code delta: "+codeDelta);
+        Console.WriteLine("Help delta: "+helpDelta);
+
+        //gradients for it
+        double gradientGreet = greetDelta * greetingInput;
+        double gradientCode = codeDelta * codeInput;
+        double gradientHelp = helpDelta * helpInput;
+
+        Console.WriteLine("Gradient Greet: " + gradientGreet);
+        Console.WriteLine("Gradient Code: " + gradientCode);
+        Console.WriteLine("Gradient Help: " + gradientHelp);
+
+        //final weight after learning
+        double newGreetWeight = greetingWeight - (learningRate * gradientGreet);
+        double newCodeWeight = codeWeight - (learningRate * gradientCode);
+        double newHelpWeight = helpWeight - (learningRate * gradientHelp);
+
+        Console.WriteLine("New Greeting Weight: " + newGreetWeight);
+        Console.WriteLine("New Code Weight: " + newCodeWeight);
+        Console.WriteLine("New Help Weight: " + newHelpWeight);
+    }
+
+
+    public static double Sigmoid(double x)
+    {
+        return 1.0 / (1.0 + Math.Exp(-x));
+    }
+    */
+    
+    /*
+    //backpropagation
+    
+    public static void Main()
+    {
+        //word bag
+        List<string> words = new List<string> { "hello", "code", "help", "please", "bye" };
+
+        //inputs
+        double greetingInput = 0;
+        double codeInput = 0;
+        double helpInput = 0;
+
+        //weights
+        double greetingWeight = 1;
+        double codeWeight = 1;
+        double helpWeight = 1;
+        
+        //bias
+        double bias = 1;
+        
+        //target which is 1
+        double target = 1;
+
+        //learning rate
+        double learningRate = 0.1;
+
+        Console.WriteLine("Hello, How can I help?: ");
+        #pragma warning disable CS8602 // Dereference of a possibly null reference.
+        string input = Console.ReadLine().ToLower();
+        #pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+
+
+        if (input == null)
+        {
+            Console.WriteLine("Please enter something...");
+            return;
+        }
+
+        else if (input.Contains("hello"))
+        {
+            greetingInput = 2;
+        }
+
+        else if (input.Contains("code"))
+        {
+            codeInput = 2;
+        }
+
+        else if (input.Contains("help")) {
+            helpInput = 2; 
+        }
+
+
+        //Z for sigmoid equation
+        double greetz = (greetingInput * greetingWeight) + bias;
+        double codez = (codeInput * codeWeight) + bias;
+        double helpz = (helpInput * helpWeight) + bias;
+
+        double greetConfidence = Sigmoid(greetz);
+        double codeConfidence = Sigmoid(codez);
+        double helpConfidence = Sigmoid(helpz);
+
+
+        if (greetConfidence > 0.8)
+        {
+            Console.WriteLine($"GreetConfidence {greetConfidence}");
+            Console.WriteLine("Hello");
+        }
+
+        else if (codeConfidence > 0.8)
+        {
+            Console.WriteLine("Code help");
+        }
+
+        else if (helpConfidence > 0.8)
+        {
+            Console.WriteLine("What do you need help with?");
+        }
+
+        else
+        {
+            Console.WriteLine("Help:" +helpConfidence);
+            Console.WriteLine("Greet: " + greetConfidence);
+            Console.WriteLine("Code: "+codeConfidence);
+            Console.WriteLine("Adjust vals");
+        }
+
+        //errors 
+        double errorGreet = greetConfidence - target;
+        double errorCode = codeConfidence - target;
+        double errorHelp = helpConfidence - target;
+
+        //deltas
+        double deltaGreet = errorGreet * greetConfidence * (1-greetConfidence);
+        double deltaCode = errorCode * codeConfidence * (1-codeConfidence);
+        double deltaHelp = errorHelp * helpConfidence * (1-helpConfidence);
+
+        //finally new weights
+        greetingWeight = greetingWeight - (learningRate * deltaGreet);
+        codeWeight = codeWeight - (learningRate * deltaCode);
+        helpWeight = helpWeight - (learningRate * deltaHelp);
+
+        
+       
+    }
+    //basic sigmoid equation
+    public static double Sigmoid(double x)
+    {
+        return 1.0 / (1.0 + Math.Exp(-x));
+    }
+    */
+
+
+
+    /*
     //start of machine learning:
     public static void Main()
     {
@@ -103,10 +362,10 @@ public class Learningneural
     {
         return 1.0 / (1.0 + Math.Exp(-x));
     }
-
-
-    //COOLEST SHIT IVE DONE EVER DOWN BELOW
+    */
     /*
+    //COOLEST SHIT IVE DONE EVER DOWN BELOW
+    
     //Start of confidence on text
 
     //making it save now
@@ -152,7 +411,6 @@ public class Learningneural
         //json data to save for my model
         var jsondata = new
         {
-
             Input1 = x1,
             Input2 = x2,
             W1 = $"{w1:F4}",
@@ -163,7 +421,6 @@ public class Learningneural
 
         };
     
-
         //new weights
         Console.WriteLine($"New weight W1: {w1:F4} ");
         Console.WriteLine($"New weight W2: {w2:F4}");  
@@ -184,7 +441,7 @@ public class Learningneural
     */
 
 
-   //two layer neural network
+    //two layer neural network
     /*
     public static void Main()
     {
