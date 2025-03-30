@@ -79,7 +79,12 @@ public class Learningneural
         return expValues.Select(x => x / sumExp).ToArray();
     }
 
-    //start of RNN model testing and encoded inputs
+
+    //start of RNN model testing and encoded inputs  with some writing animation.
+    /***************************************************************************
+     ****************************************************************************/
+
+    //dictionary for encoded word inputs
    static Dictionary<string, int> vocabulary = new Dictionary<string, int>
     {
         { "hello", 0 },
@@ -90,40 +95,45 @@ public class Learningneural
         { "you", 5 },
         { "name", 6 },
         { "what's", 7 }
+     
     };
+    //testing
     static void Main()
     {
         
-
-
-       
         Console.WriteLine("Hello");
+
+        //takes userinput, then runs the encode method to get int values, then writes back
         String userinput = Console.ReadLine().ToLower();
         List<int> encoded = EncodeInput(userinput);
-
         Console.WriteLine("Encoded input: "+string.Join(",", encoded));
-        /*
+
         //Types like chatgpt
          foreach (char c in userinput)
-        {  
+        {
             Console.Write(c);
+
             Thread.Sleep(50); 
         }
-        */
+        
         
     }
-
+    //makes a list with the vocab, runs the input against it, if it flags, return the encoded values, else,  return -1 for unknown.
     static List<int>  EncodeInput(string input)
     {
+        //taking inputs, and splitting to ensure words get taken.
         String[] words = input.Split(' ');
+        //new vocab
         List<int> output = new List<int>();
+        //goes through each word in the inputs
         foreach (String word in words)
         {
+            //if it flags, add word
             if (vocabulary.ContainsKey(word))
             {
                 output.Add(vocabulary[word]);
             }
-
+            //else, return -1 and display what word was not in vocab
             else
             {
                 Console.WriteLine($"Unknown Word: {word}");
@@ -131,7 +141,7 @@ public class Learningneural
             }
 
         }
-
+        //return the final list to main
         return output;
 
     }
@@ -513,7 +523,8 @@ public class Learningneural
     }
     */
     /*
-    //COOLEST SHIT IVE DONE EVER DOWN BELOW
+    //COOLEST THING IVE DONE EVER DOWN BELOW(Edit, it was not the coolest thing. Newest is, the RNN) 
+
     
     //Start of confidence on text
 
@@ -683,7 +694,6 @@ public class Learningneural
         double newweight = w - (learningRate * gradient);
 
         return newweight;
-
 
     }
     */
