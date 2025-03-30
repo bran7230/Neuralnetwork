@@ -2,6 +2,7 @@
 using System.Diagnostics.Tracing;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using System.Linq;
 
 public class Learningneural
 {
@@ -58,8 +59,160 @@ public class Learningneural
 
     */
 
+    /*
+      //Types like chatgpt
+       foreach (char c in userinput)
+      {  
+          Console.Write(c);
+          Thread.Sleep(50); 
+      }
+      */
+    public static double Sigmoid(double x)
+    {
+        return 1.0 / (1.0 + Math.Exp(-x));
+    }
+    // Softmax function
+    static double[] Softmax(double[] values)
+    {
+        double[] expValues = values.Select(Math.Exp).ToArray();
+        double sumExp = expValues.Sum();
+        return expValues.Select(x => x / sumExp).ToArray();
+    }
 
-    
+    //start of RNN model testing and encoded inputs
+   static Dictionary<string, int> vocabulary = new Dictionary<string, int>
+    {
+        { "hello", 0 },
+        { "hi", 1 },
+        { "goodbye", 2 },
+        { "how", 3 },
+        { "are", 4 },
+        { "you", 5 },
+        { "name", 6 },
+        { "what's", 7 }
+    };
+    static void Main()
+    {
+        
+
+
+       
+        Console.WriteLine("Hello");
+        String userinput = Console.ReadLine().ToLower();
+        List<int> encoded = EncodeInput(userinput);
+
+        Console.WriteLine("Encoded input: "+string.Join(",", encoded));
+        /*
+        //Types like chatgpt
+         foreach (char c in userinput)
+        {  
+            Console.Write(c);
+            Thread.Sleep(50); 
+        }
+        */
+        
+    }
+
+    static List<int>  EncodeInput(string input)
+    {
+        String[] words = input.Split(' ');
+        List<int> output = new List<int>();
+        foreach (String word in words)
+        {
+            if (vocabulary.ContainsKey(word))
+            {
+                output.Add(vocabulary[word]);
+            }
+
+            else
+            {
+                Console.WriteLine($"Unknown Word: {word}");
+                output.Add(-1);
+            }
+
+        }
+
+        return output;
+
+    }
+    /*
+    //softmax test
+    static void Main()
+    {
+        double learningRate = 0.1;
+        //z values from greet, code, help
+        double[] logits = { 1.0885, 0.621, 1.242 };
+        Console.WriteLine("Input Values (Logits):");
+        foreach (var logit in logits)
+        {
+            Console.WriteLine(logit);
+        }
+
+        double[] probabilities = Softmax(logits);
+
+        Console.WriteLine("\nSoftmax Probabilities:");
+        foreach (var prob in probabilities)
+        {
+            Console.WriteLine(prob);
+        }
+
+        double loss = -(1 * Math.Log(0.358) + 0 * Math.Log(0.224) + 0 * Math.Log(0.417));
+
+        Console.WriteLine(loss);
+
+        double errorgreet = 0.358 - 1;
+        double errorcode = 0.224 - 0;
+        double errorhelp = 0.417 - 0;
+
+        Console.WriteLine("Error greet: " + errorgreet);
+        Console.WriteLine("Error code: " + errorcode);
+        Console.WriteLine("Error help: "+errorhelp);
+
+        double newGreet1 = 0.4 - (learningRate * errorgreet);
+        double newGreet2 = 0.3 - (learningRate * errorgreet);
+        double newGreet3 = 0.7 - (learningRate * errorgreet);
+        Console.WriteLine("Greeting gradient decent: ");
+        Console.WriteLine("Neuron 1: " + newGreet1 + "\nNeuron 2: "+newGreet2+"\nNeuron 3: "+newGreet3);
+
+        double newCode1 = 0.5 - (learningRate * errorcode);
+        double newCode2 = 0.2 - (learningRate * errorcode);
+        double newCode3 = 0.1 - (learningRate * errorcode);
+
+        Console.WriteLine("Code gradient decent: ");
+        Console.WriteLine("Neuron 1: " + newCode1 + "\nNeuron 2: " + newCode2 + "\nNeuron 3: " + newCode3);
+
+       double newHelp = 0.9 - (learningRate * errorhelp);
+       double newHelp2 = 0.4 -(learningRate * errorhelp);
+       double newHelp3 = 0.3 -(learningRate * errorhelp);
+
+        Console.WriteLine("Help gradient decent: ");
+        Console.WriteLine("Neuron 1: " + newHelp + "\nNeuron 2: " + newHelp2 + "\nNeuron 3: " + newHelp3);
+
+       double zgreet = (0.785*0.4642)+(0.750*0.3642)+(0.785*0.7642);
+       Console.WriteLine(zgreet);
+
+        double zcode = (0.785 * 0.4776) + (0.750 * 0.1776) + (0.785 * 0.0776);
+        Console.WriteLine(zcode);
+
+        double zhelp = (0.785 * 0.858) + (0.750 * 0.3583) + (0.785 * 0.2583);
+        Console.WriteLine(zhelp);
+
+        double[] vals = { 1.2374, 0.5690, 1.1450 };
+
+        double[] probs = Softmax(vals);
+        Console.WriteLine("New Softmax: ");
+        foreach(var prob in probs)
+        {
+            Console.WriteLine(prob);
+        }
+
+        Console.WriteLine("Loss new: ");
+        double losss = -Math.Log(0.4124);
+        Console.WriteLine(losss);
+    }
+    */
+
+
     /*
     Simple Intent Classifier - Neural Network (C#)
 
@@ -79,8 +232,8 @@ public class Learningneural
 
     // add a * / below to run it
     */
-
     /*
+
     public static void Main()
     {
         //base values for false.
@@ -193,13 +346,9 @@ public class Learningneural
         Console.WriteLine("New Help Weight: " + newHelpWeight);
     }
 
-
-    public static double Sigmoid(double x)
-    {
-        return 1.0 / (1.0 + Math.Exp(-x));
-    }
     */
-    
+
+
     /*
     //backpropagation
     
