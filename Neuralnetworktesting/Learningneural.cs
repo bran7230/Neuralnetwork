@@ -85,8 +85,9 @@ public class Learningneural
      ****************************************************************************/
 
     //dictionary for encoded word inputs
-   static Dictionary<string, int> vocabulary = new Dictionary<string, int>
+   public static Dictionary<string, int> vocabulary = new Dictionary<string, int>
     {
+
         { "hello", 0 },
         { "hi", 1 },
         { "goodbye", 2 },
@@ -94,7 +95,10 @@ public class Learningneural
         { "are", 4 },
         { "you", 5 },
         { "name", 6 },
-        { "what's", 7 }
+        { "what's", 7 },
+        {"your",8 },
+        {"whats",9 },
+        
      
     };
     //testing
@@ -104,19 +108,82 @@ public class Learningneural
         Console.WriteLine("Hello");
 
         //takes userinput, then runs the encode method to get int values, then writes back
+
+        string filePath = "C:\\Users\\brand\\OneDrive\\Desktop\\Neuralnetworktesting\\Neuralnetworktesting\\vocab.json";
+        if (File.Exists(filePath))
+        {
+            string existingFile = File.ReadAllText(filePath);
+            vocabulary = JsonConvert.DeserializeObject<Dictionary<string, int>>(existingFile) ?? new Dictionary<string, int>();
+        }
+
         String userinput = Console.ReadLine().ToLower();
         List<int> encoded = EncodeInput(userinput);
         Console.WriteLine("Encoded input: "+string.Join(",", encoded));
+        string chatbot = "";
 
-        //Types like chatgpt
-         foreach (char c in userinput)
+
+
+        if (encoded.Contains(0) || encoded.Contains(1))
         {
-            Console.Write(c);
-
-            Thread.Sleep(50); 
+            chatbot = "Hello";
         }
+
+        else if(encoded.Contains(3) && encoded.Contains(4) && encoded.Contains(5)) 
+        {
+            chatbot = "How are you?";
+        }
+
+        else if(encoded.Contains(7) || encoded.Contains(9) && encoded.Contains(8) && encoded.Contains(6))
+        {
+            chatbot = "I dont have a name, im a Ai language model.";
+        }
+
+        else if(encoded.Contains(-1))
+        {
+            Console.WriteLine("Sorry I dont know this word, can you say it again so I can log it?: ");
+            string newword = Console.ReadLine().ToLower();
+            if (vocabulary.ContainsKey(newword))
+            {
+                chatbot = chatbot + "Thanks I already know this word";
+            }
+            else
+            {   vocabulary.Add(newword, vocabulary.Count);
+                string json = JsonConvert.SerializeObject(vocabulary, Formatting.Indented);
+                File.WriteAllText(filePath, json); // Save the updated vocabulary
+                chatbot = chatbot + "Added word, thank you!";
+                
+            }
+
+        }
+
+
+        //checks confidence based on words known vs provided. excludes -1 or unknown. 
+        double confidence = (double)encoded.Count(e => e !=-1)/encoded.Count;
         
+            //Types like chatgpt
+            foreach (char c in chatbot)
+            {
+                Console.Write(c);
+                
+                Thread.Sleep(50);
+            }
         
+            List<string>  conversations = new List<string>();
+
+        if (vocabulary.Count > 0)
+        {
+            conversations.Add($"User: {userinput}");
+            conversations.Add($"Chatbot: {chatbot}");
+            conversations.Add($"Confidence: {confidence:P}\n");
+        }
+
+        string convopath = "C:\\Users\\brand\\OneDrive\\Desktop\\Neuralnetworktesting\\Neuralnetworktesting\\convo.txt";
+        if (conversations != null)
+        {
+            File.AppendAllLines(convopath, conversations);
+        }
+
+
     }
     //makes a list with the vocab, runs the input against it, if it flags, return the encoded values, else,  return -1 for unknown.
     static List<int>  EncodeInput(string input)

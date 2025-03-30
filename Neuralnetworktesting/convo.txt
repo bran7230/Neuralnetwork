@@ -1,0 +1,17 @@
+
+User: hello test
+Chatbot: Hello
+Confidence: 50.00%
+
+User: hello world
+Chatbot: Hello
+Confidence: 100.00%
+
+User: hello world
+Chatbot: Hello
+Confidence: 100.00%
+
+User: hello world
+Chatbot: Hello
+Confidence: 100.00%
+
