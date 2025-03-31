@@ -8,3 +8,18 @@ User: hello world goodbye
 Chatbot: Hello
 Confidence: 100.00%
 
+Time of chat: 2025-03-31 4:21:30 PM
+User: hello how are you
+Chatbot: Hello
+Confidence: 100.00%
+
+Time of chat: 2025-03-31 4:21:41 PM
+User: last chat
+Chatbot: Your last question was: hello how are you
+Confidence: 100.00%
+
+Time of chat: 2025-03-31 4:22:04 PM
+User: tech
+Chatbot: Added word, thank you!
+Confidence: 0.00%
+

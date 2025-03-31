@@ -78,11 +78,107 @@ public class Learningneural
         double sumExp = expValues.Sum();
         return expValues.Select(x => x / sumExp).ToArray();
     }
+   
 
 
-    //start of RNN model testing and encoded inputs  with some writing animation.
+
+    //FINALLY STARTTING TRANSFOMRERS!!!!
+
+
+
+
+
+
+
+
+
+
+    //RNN Testing
+    /* 
+   public static void Main()
+    {
+        // Inputs
+        double input1 = 1;
+        double input2 = 0;
+
+        // Weights
+        double inputToHiddenWeight = 0.5; // Input to Hidden
+        double hiddenToHiddenWeight = 0.4; // Recurrent Hidden to Hidden
+        double hiddenToOutputWeight = 0.8; // Hidden to Output
+
+        // Initial hidden state
+        double previousHiddenState = 0;
+
+        double learningRate = 0.1;
+
+        // Biases
+        double hiddenBias = 0.1;
+        double outputBias = 0.2;
+
+        // Actual (Target) Output
+        double actualOutput = 1;
+
+        // Forward Pass
+        double currentHiddenState = Math.Tanh(inputToHiddenWeight * input1 + hiddenToHiddenWeight * previousHiddenState + hiddenBias);
+        double predictedOutput = hiddenToOutputWeight * currentHiddenState + outputBias;
+
+        // Loss Calculation using Mean Squared Error (MSE)
+        double loss = 0.5 * Math.Pow(predictedOutput - actualOutput, 2);
+
+        Console.WriteLine($"Hidden State: {currentHiddenState}");
+        Console.WriteLine($"Predicted Output: {predictedOutput}");
+        Console.WriteLine($"Loss: {loss}");
+
+        double gradientLoss = predictedOutput - actualOutput;
+        double gradientOutw = (gradientLoss / predictedOutput) * currentHiddenState;
+        double gradoutputBias = gradientLoss / predictedOutput;
+
+        Console.WriteLine(gradientLoss);
+        Console.WriteLine(gradoutputBias);
+        Console.WriteLine(gradoutputBias);
+
+        //gradient hidden state:
+        double  gradhiddenstate = gradientLoss * hiddenToOutputWeight; 
+        Console.WriteLine(gradhiddenstate);
+
+        //deritave of tahn activation 
+        double tahnDerivative = 1 - Math.Pow(currentHiddenState, 2);
+        Console.WriteLine("Test:"+tahnDerivative);
+
+        //grradient for hidden to hidden weight 
+
+        double gradHiddentToHiddenweight = gradhiddenstate * tahnDerivative * previousHiddenState;
+        Console.WriteLine(gradHiddentToHiddenweight);
+
+        //gradient for hidden bias:
+
+        double gradHiddenBias = gradhiddenstate * tahnDerivative;
+        Console.WriteLine(gradHiddenBias);
+
+        double newInputToHiddenWeight = inputToHiddenWeight - (learningRate * tahnDerivative);
+        double newHiddenToHiddenWeight = hiddenToHiddenWeight;
+        double newHiddenBias = hiddenBias - (learningRate * -0.2108);
+        double newOutputBias = outputBias - (learningRate * -0.5882);
+
+        Console.WriteLine(newInputToHiddenWeight);
+        Console.WriteLine(newHiddenToHiddenWeight);
+        Console.WriteLine(newHiddenBias);
+        Console.WriteLine(newOutputBias);
+
+
+        currentHiddenState = Math.Tanh(inputToHiddenWeight * input1 + hiddenToHiddenWeight * previousHiddenState + hiddenBias);
+        predictedOutput = hiddenToOutputWeight * currentHiddenState + outputBias;
+        loss = 0.5 * Math.Pow(learningRate - predictedOutput, 2);
+        Console.WriteLine(predictedOutput);
+        Console.WriteLine(currentHiddenState);
+        Console.WriteLine(loss);
+    }
+
+    */
+
+    //start of RNN model testing and encoded inputs  with some writing animation. Basic chatbot with some saving vocabs.
     /***************************************************************************
-     ****************************************************************************/
+     ***************************************************************************
 
     //dictionary for encoded word inputs
    public static Dictionary<string, int> vocabulary = new Dictionary<string, int>
@@ -258,6 +354,7 @@ public class Learningneural
         return output;
 
     }
+    */
     /*
     //softmax test
     static void Main()

@@ -23,5 +23,6 @@
   "say": 21,
   "chat": 22,
   "clear": 23,
-  "memory": 24
+  "memory": 24,
+  "tech": 25
 }
