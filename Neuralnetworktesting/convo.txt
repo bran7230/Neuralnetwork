@@ -1,17 +1,10 @@
-
-User: hello test
-Chatbot: Hello
-Confidence: 50.00%
-
-User: hello world
-Chatbot: Hello
+Time of chat: 2025-03-30 8:09:34 PM
+User: clear memory
+Chatbot: Memory wiped.
 Confidence: 100.00%
 
-User: hello world
-Chatbot: Hello
-Confidence: 100.00%
-
-User: hello world
+Time of chat: 2025-03-30 8:10:18 PM
+User: hello world goodbye
 Chatbot: Hello
 Confidence: 100.00%
 

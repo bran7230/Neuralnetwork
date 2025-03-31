@@ -105,16 +105,32 @@ public class Learningneural
     static void Main()
     {
         
-        Console.WriteLine("Hello");
+        Console.WriteLine("Hello, say last chat to see previous message, or clear memory to clear them.");
 
         //takes userinput, then runs the encode method to get int values, then writes back
 
         string filePath = "C:\\Users\\brand\\OneDrive\\Desktop\\Neuralnetworktesting\\Neuralnetworktesting\\vocab.json";
+
         if (File.Exists(filePath))
         {
             string existingFile = File.ReadAllText(filePath);
             vocabulary = JsonConvert.DeserializeObject<Dictionary<string, int>>(existingFile) ?? new Dictionary<string, int>();
         }
+
+      
+            string convopath = "C:\\Users\\brand\\OneDrive\\Desktop\\Neuralnetworktesting\\Neuralnetworktesting\\convo.txt";
+            List<string> conversations = new List<string>();
+
+            if (File.Exists(convopath))
+            {
+                conversations = File.ReadAllLines(convopath).ToList();
+                Console.WriteLine("Previous conversations loaded.");
+            }
+            else
+            {
+                Console.WriteLine("No previous conversations found.");
+            }
+        
 
         String userinput = Console.ReadLine().ToLower();
         List<int> encoded = EncodeInput(userinput);
@@ -141,7 +157,9 @@ public class Learningneural
         else if(encoded.Contains(-1))
         {
             Console.WriteLine("Sorry I dont know this word, can you say it again so I can log it?: ");
+         
             string newword = Console.ReadLine().ToLower();
+            
             if (vocabulary.ContainsKey(newword))
             {
                 chatbot = chatbot + "Thanks I already know this word";
@@ -156,6 +174,32 @@ public class Learningneural
 
         }
 
+        else
+        {
+            chatbot = "Sorry, im not sure how to respond to this yet.";
+        }
+
+        if (userinput.Contains("last chat"))
+        {
+            var lastUserInput = conversations
+     .LastOrDefault(line => line.Trim().StartsWith("User:", StringComparison.OrdinalIgnoreCase));
+            if (lastUserInput != null)
+            {
+                chatbot = ($"Your last question was: {lastUserInput.Substring(6)}"); // Remove "User: " prefix
+            }
+            else
+            {
+                chatbot = ("I don't remember your last question.");
+            }
+        }
+
+        if(userinput.Contains("clear memory"))
+        {
+            conversations.Clear();
+            File.WriteAllText(convopath, string.Empty);
+            chatbot = "Memory wiped.";
+        }
+
 
         //checks confidence based on words known vs provided. excludes -1 or unknown. 
         double confidence = (double)encoded.Count(e => e !=-1)/encoded.Count;
@@ -168,21 +212,23 @@ public class Learningneural
                 Thread.Sleep(50);
             }
         
-            List<string>  conversations = new List<string>();
+           
 
         if (vocabulary.Count > 0)
         {
+            conversations.Add($"Time of chat: {DateTime.Now.ToString()}");
             conversations.Add($"User: {userinput}");
             conversations.Add($"Chatbot: {chatbot}");
             conversations.Add($"Confidence: {confidence:P}\n");
         }
 
-        string convopath = "C:\\Users\\brand\\OneDrive\\Desktop\\Neuralnetworktesting\\Neuralnetworktesting\\convo.txt";
+        
         if (conversations != null)
         {
-            File.AppendAllLines(convopath, conversations);
+            File.WriteAllLines(convopath, conversations);
         }
 
+      
 
     }
     //makes a list with the vocab, runs the input against it, if it flags, return the encoded values, else,  return -1 for unknown.
