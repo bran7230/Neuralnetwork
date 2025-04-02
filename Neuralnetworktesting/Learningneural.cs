@@ -84,7 +84,75 @@ public class Learningneural
 
     //FINALLY STARTING TRANSFOMRERS!!!!
 
+    static double[] TransformerBlock(double[] input)
+    {
+        double[,] W1 = { { 0.5, 0.1 }, { 0.4, 0.6 } };
+        double[] b1 = { 0.2, 0.2 };
 
+        double[,] W2 = { { 0.3 }, { 0.5 } };
+        double b2 = 0.1;
+
+        double[] z1 = new double[2];
+
+        z1[0] = (input[0] * W1[0, 0]) + (input[1] * W1[1, 0]) + b1[0];
+        z1[1] = (input[0] * W1[0, 1]) + (input[1] * W1[1, 1]) + b1[1];
+
+        //applying Relu to not let negatives pass (Relu is a Max(0,xi))
+        for (int i = 0; i < z1.Length; i++)
+        {
+            if (z1[i] < 0)
+            {
+                z1[i] = 0;
+            }
+        }
+
+        double ffnOutput = (z1[0] * W2[0, 0]) + (z1[1] * W2[1, 0]) + b2;
+
+        //Hardcoding for tests
+        double[] ffnOutVec = { 0.9, 1.4 };
+
+        //Residual connections 
+        double[] residual = new double[2];
+
+        for (int i = 0; i < 2; i++)
+        {
+            residual[i] = ffnOutVec[i] + input[i];
+        }
+
+        //Now Normalize values
+
+        double[] normalized = new double[2];
+
+        double mean = (residual[0] + residual[1]) / 2.0;
+
+        //Variance 
+        double variance = ((Math.Pow(residual[0] - mean, 2) + Math.Pow(residual[1] - mean, 2)) / 2.0);
+        double epsilon = 1e-5;
+
+        //Normalize values
+
+        for (int i = 0; i < 2; i++)
+        {
+            normalized[i] = (residual[i] - mean) / Math.Sqrt(variance + epsilon);
+        }
+
+        //finally return values
+        return normalized;
+    }
+
+
+    public static void Main()
+    {
+        double[] result = TransformerBlock(new double[] { 1.0, 2.0 });
+        Console.WriteLine("Transformer Output:");
+        for (int i = 0; i < result.Length; i++)
+        {
+            Console.WriteLine($"result[{i}] = {result[i]}");
+        }
+
+    }
+    /*
+     * First Transformers block
     public static void Main()
     {
         //Matrixes
@@ -117,8 +185,34 @@ public class Learningneural
         double output = (z1[0] * W2[0, 0]) + (z1[1] * W2[1, 0]) + b2;
         Console.WriteLine(output);
 
-    }
+        //Residual Connections 
+        double[] ffnOutput = { 0.9, 1.4 }; 
 
+        double[] residual = new double[2];
+        double[] norm = new double[2];
+
+        for (int i = 0; i < 2; i++)
+        {
+            residual[i] = ffnOutput[i] + input[i];
+            
+            
+        }
+
+        double mean = (residual[0] + residual[1]) / 2.0;
+
+        //Variance
+        double varience = ((Math.Pow(residual[0] - mean, 2) + Math.Pow(residual[1] - mean, 2)) / 2.0);
+
+        //Normalization
+        double epsilon = 1e-5;
+
+        for (int i = 0; i < 2; i++)
+        {
+            norm[i] = (residual[i] - mean) / Math.Sqrt(varience + epsilon);
+            Console.WriteLine(norm[i]);
+        }
+    }
+*/
 
     //RNN Testing
     /* 
