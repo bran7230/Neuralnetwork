@@ -82,15 +82,42 @@ public class Learningneural
 
 
 
-    //FINALLY STARTTING TRANSFOMRERS!!!!
+    //FINALLY STARTING TRANSFOMRERS!!!!
 
 
+    public static void Main()
+    {
+        //Matrixes
+        double[] input = { 2.0, 1.0 };
+        double[,] W1 = {
+            { 0.5, 0.1 },
+            { 0.4, 0.6 },
+        };
+        double[,] W2 = {
+            { 0.3 },
+            { 0.5 }
+        };
 
+        double[] b1 = { 0.2, 0.2 }; 
+        double b2 = 0.1;
+        double[] z1 = new double[2];
 
+        z1[0] =  (input[0] * W1[0, 0]) + (input[1] * W1[1, 0]) + b1[0];
+        z1[1] = (input[0] * W1[0,1]) + (input[1] * W1[1,1]) + b1[1];
 
+        //applying Relu to not let negatives pass (Relu is a Max(0,xi))
+        for (int i = 0; i < z1.Length; i++)
+        {
+            if (z1[i] < 0)
+            {
+                z1[i] = 0;
+            }
+        }
 
+        double output = (z1[0] * W2[0, 0]) + (z1[1] * W2[1, 0]) + b2;
+        Console.WriteLine(output);
 
-
+    }
 
 
     //RNN Testing
@@ -355,6 +382,8 @@ public class Learningneural
 
     }
     */
+
+
     /*
     //softmax test
     static void Main()
@@ -907,7 +936,5 @@ public class Learningneural
 
     }
     */
-
-
 }
 
