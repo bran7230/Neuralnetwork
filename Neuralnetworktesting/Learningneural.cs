@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics.Tracing;
-using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
-using System.Linq;
+﻿using System.Reflection;
 
 public class Learningneural
 {
@@ -78,13 +74,175 @@ public class Learningneural
         double sumExp = expValues.Sum();
         return expValues.Select(x => x / sumExp).ToArray();
     }
-   
 
 
 
+    
+    //two layer transformer, actually learns
+    
+    // Global vocab dictionaries
+    static Dictionary<int, string> idToWord = new Dictionary<int, string>
+{
+    { 0, "hello" },
+    { 1, "world" },
+    { 2, "I" },
+    { 3, "am" },
+    { 4, "Test" }
+};
+
+    static Dictionary<string, int> wordToId = idToWord.ToDictionary(kv => kv.Value, kv => kv.Key);
+
+    public static void Main()
+    {
+        int epochs = 1000;
+
+      
+        TransformerModel model = new TransformerModel(numLayers: 2);
+
+        for (int epoch = 0; epoch < epochs; epoch++)
+        {
+            string inputWord = "I";
+            string targetWord = "am";
+
+            int inputId = wordToId[inputWord];
+            int targetId = wordToId[targetWord];
+
+            double[] inputVector = new double[] { 0, 0, 1, 0, 0 };
+            double[] logits = model.Forward(inputVector);
+
+
+            double[] probs = Softmax(logits);
+
+            int predictedId = Array.IndexOf(probs, probs.Max());
+            string predictedWord = idToWord[predictedId];
+
+           
+
+            double loss = -Math.Log(probs[targetId]);
+            if (epoch % 100 == 0)
+            {
+                Console.WriteLine($"Epoch {epoch} | Loss: {loss:F4} | Predicted: {predictedWord}");
+            }
+
+            double[] delta = new double[probs.Length];
+           
+
+            for (int i = 0; i < probs.Length; i++)
+            {
+                delta[i] = probs[i];
+            }
+            delta[targetId] -= 1.0;
+            model.UpdateOutputWeights(delta, 0.1);
+        }
+
+
+    }
+    
+    //N Layer Transformer
+    public class TransformerBlock
+    {
+        private double[,] W1;
+        private double[] b1;
+        private double[,] W2;
+        private double b2;
+        private double[] lastZ1;
+
+        public TransformerBlock(double[,] w1, double[] b1, double[,] w2, double b2)
+        {
+            this.W1 = w1;
+            this.b1 = b1;
+            this.W2 = w2;
+            this.b2 = b2;
+        }
+
+        public double[] Forward(double[] input)
+        {
+            double[] z1 = new double[2];
+            z1[0] = (input[0] * W1[0, 0]) + (input[1] * W1[1, 0]) + b1[0];
+            z1[1] = (input[0] * W1[0, 1]) + (input[1] * W1[1, 1]) + b1[1];
+            lastZ1 = z1;
+
+            for (int i = 0; i < 2; i++)
+            {
+                if (z1[i] < 0) z1[i] = 0;
+            }
+
+            double[] logits = new double[5]; // 5 = vocab size
+            for (int i = 0; i < 5; i++)
+            {
+                logits[i] = (z1[0] * W2[0, i]) + (z1[1] * W2[1, i]) + b2;
+            }
+
+            return logits; // no normalization here for now
+        }
+
+        public double[] GetLastZ1()
+        {
+            return lastZ1;
+        }
+
+
+        public void UpdateOutputWeights(double[] delta, double learningRate, double[] z1)
+        {
+            for (int i = 0; i < W2.GetLength(0); i++) // each hidden neuron
+            {
+                for (int j = 0; j < W2.GetLength(1); j++) // each output logit
+                {
+                    W2[i, j] -= learningRate * delta[j] * z1[i];
+                }
+            }
+
+            b2 -= learningRate * delta.Sum(); // update shared bias
+        }
+
+
+    }
+    public class TransformerModel
+    {
+        private List<TransformerBlock> blocks = new List<TransformerBlock>();
+
+        public TransformerModel(int numLayers)
+        {
+            for (int i = 0; i < numLayers; i++)
+            {
+
+                double[,] W1 = { { 0.5, 0.1 }, { 0.4, 0.6 } };
+                double[] b1 = { 0.2, 0.2 };
+                double[,] W2 = {
+                         { 0.3, 0.4, 0.1, 0.5, 0.2 },
+                         { 0.5, 0.6, 0.3, 0.1, 0.4 }
+                         }; // shape: 2 x 5
+
+                double b2 = 0.1;
+
+                blocks.Add(new TransformerBlock(W1, b1, W2, b2));
+            }
+        }
+
+        public double[] Forward(double[] input)
+        {
+            double[] output = input;
+
+            foreach (var block in blocks)
+            {
+                output = block.Forward(output);
+            }
+            return output;
+        }
+        public void UpdateOutputWeights(double[] delta, double learningRate)
+        {
+            blocks.Last().UpdateOutputWeights(delta, learningRate, blocks.Last().GetLastZ1());
+        }
+
+    }
+
+    
+
+
+    /*
     //FINALLY STARTING TRANSFOMRERS!!!!
 
-    static double[] TransformerBlock(double[] input)
+    static double[] TransformerBlock1(double[] input)
     {
         double[,] W1 = { { 0.5, 0.1 }, { 0.4, 0.6 } };
         double[] b1 = { 0.2, 0.2 };
@@ -140,17 +298,88 @@ public class Learningneural
         return normalized;
     }
 
+    static double[] TransformerBlock2(double[] input)
+    {
+        double[,] W1 = {
+            { 0.6, 0.2 },
+            { 0.3, 0.7 }
+            };
+        double[] b1 = { 0.1, 0.1 };
+
+        double[,] W2 = {
+             { 0.4 },
+             { 0.6 }
+             };
+        double b2 = 0.2;
+
+
+        double[] z1 = new double[2];
+
+        z1[0] = (input[0] * W1[0, 0]) + (input[1] * W1[1, 0]) + b1[0];
+        z1[1] = (input[0] * W1[0, 1]) + (input[1] * W1[1, 1]) + b1[1];
+
+        //applying Relu to not let negatives pass (Relu is a Max(0,xi))
+        for (int i = 0; i < z1.Length; i++)
+        {
+            if (z1[i] < 0)
+            {
+                z1[i] = 0;
+            }
+        }
+
+        double ffnOutput = (z1[0] * W2[0, 0]) + (z1[1] * W2[1, 0]) + b2;
+
+        //Hardcoding for tests
+        double[] ffnOutVec = { 0.9, 1.4 };
+
+        //Residual connections 
+        double[] residual = new double[2];
+
+        for (int i = 0; i < 2; i++)
+        {
+            residual[i] = ffnOutVec[i] + input[i];
+        }
+
+        //Now Normalize values
+
+        double[] normalized = new double[2];
+
+        double mean = (residual[0] + residual[1]) / 2.0;
+
+        //Variance 
+        double variance = ((Math.Pow(residual[0] - mean, 2) + Math.Pow(residual[1] - mean, 2)) / 2.0);
+        double epsilon = 1e-5;
+
+        //Normalize values
+
+        for (int i = 0; i < 2; i++)
+        {
+            normalized[i] = (residual[i] - mean) / Math.Sqrt(variance + epsilon);
+        }
+
+        //finally return values
+        return normalized;
+    }
+
 
     public static void Main()
     {
-        double[] result = TransformerBlock(new double[] { 1.0, 2.0 });
-        Console.WriteLine("Transformer Output:");
-        for (int i = 0; i < result.Length; i++)
-        {
-            Console.WriteLine($"result[{i}] = {result[i]}");
-        }
+        double[] input = { 1.0, 2.0 };
 
+        // Pass through Block 1
+        double[] layer1Output = TransformerBlock1(input);
+
+        // Then pass result into Block 2
+        double[] finalOutput = TransformerBlock2(layer1Output);
+
+        // Print final result
+        Console.WriteLine("Final Transformer Output:");
+        for (int i = 0; i < finalOutput.Length; i++)
+        {
+            Console.WriteLine($"finalOutput[{i}] = {finalOutput[i]}");
+        }
     }
+
     /*
      * First Transformers block
     public static void Main()
@@ -213,6 +442,7 @@ public class Learningneural
         }
     }
 */
+
 
     //RNN Testing
     /* 
