@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Xml.Schema;
 
 public class Learningneural
 {
@@ -74,8 +75,63 @@ public class Learningneural
         double sumExp = expValues.Sum();
         return expValues.Select(x => x / sumExp).ToArray();
     }
+  
+
+public class Tokenizer
+    {
+        private Dictionary<string, int> wordToId = new Dictionary<string, int>();
+        private Dictionary<int, string> idToWord = new Dictionary<int, string>();
+        private const int START_TOKEN = 0;
+        private const int END_TOKEN = 1;
+
+        public Tokenizer()
+        {
+            // Initialize vocabularies
+            wordToId["<START>"] = START_TOKEN;
+            wordToId["<END>"] = END_TOKEN;
+            idToWord[START_TOKEN] = "<START>";
+            idToWord[END_TOKEN] = "<END>";
+            wordToId["I"] = 2; idToWord[2] = "I";
+            wordToId["am"] = 3; idToWord[3] = "am";
+            wordToId["Ada"] = 4; idToWord[4] = "Ada";
+        }
+
+        public List<int> Encode(string scentence)
+        {
+            var tokens = new List<int> { START_TOKEN };
+            foreach (var word in scentence.Split(" "))
+            {
+                if (wordToId.ContainsKey(word)){
+                    tokens.Add(wordToId[word]);
+                }
+            }
+
+            tokens.Add(END_TOKEN);
+            return tokens;
+        }
+
+        public string Decode(List<int> tokenIds)
+        {
+            var words = new List<string>();
+            foreach (var id in tokenIds)
+            {
+                if (idToWord.ContainsKey(id))
+                {
+                    words.Add(idToWord[id]);
+                }
+            }
+            return string.Join(" ", words);
+        }
+    }
+
+    public static void Main()
+    {
+      
 
 
+
+
+    }
 
     /*
     //two layer transformer, actually learns
