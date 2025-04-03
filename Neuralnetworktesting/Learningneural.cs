@@ -77,7 +77,7 @@ public class Learningneural
 
 
 
-    
+    /*
     //two layer transformer, actually learns
     
     // Global vocab dictionaries
@@ -236,7 +236,7 @@ public class Learningneural
 
     }
 
-    
+    */
 
 
     /*
