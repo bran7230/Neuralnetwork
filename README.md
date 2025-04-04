@@ -1,3 +1,5 @@
+Edit:Im moving to c++ now, ignore previous statments, new github will be available with c++ work.
+
 # C# Neural Network Prototype
 
 This is a C# prototype designed to explore and implement neural networks and transformer-style models from scratch. The goal is to deeply understand the inner workings of AI systems by manually building each component.
