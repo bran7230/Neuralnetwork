@@ -23,3 +23,8 @@ User: tech
 Chatbot: Added word, thank you!
 Confidence: 0.00%
 
+Time of chat: 2025-04-04 6:14:14 PM
+User: hello how are you
+Chatbot: Hello
+Confidence: 100.00%
+

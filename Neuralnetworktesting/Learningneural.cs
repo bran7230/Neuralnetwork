@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Newtonsoft.Json;
+using System.Reflection;
 using System.Xml.Schema;
 
 public class Learningneural
@@ -76,7 +77,7 @@ public class Learningneural
         return expValues.Select(x => x / sumExp).ToArray();
     }
   
-
+/*
 public class Tokenizer
     {
         private Dictionary<string, int> wordToId = new Dictionary<string, int>();
@@ -127,18 +128,18 @@ public class Tokenizer
     public static void Main()
     {
       
-        /*Basic token call:
+        Basic token call:
         Tokenizer tokenizer = new Tokenizer();
         string input = "I am Ada";
         List<int> encoded = tokenizer.Encode(input);
         Console.WriteLine("Encoded: " + string.Join(", ", encoded));
         string decoded = tokenizer.Decode(encoded);
         Console.WriteLine("Decoded: " + decoded);
-        */
+        
 
 
     }
-
+*/
     /*
     //two layer transformer, actually learns
     
@@ -297,8 +298,8 @@ public class Tokenizer
         }
 
     }
-
     */
+    
 
 
     /*
@@ -591,7 +592,7 @@ public class Tokenizer
 
     //start of RNN model testing and encoded inputs  with some writing animation. Basic chatbot with some saving vocabs.
     /***************************************************************************
-     ***************************************************************************
+     **************************************************************************
 
     //dictionary for encoded word inputs
    public static Dictionary<string, int> vocabulary = new Dictionary<string, int>
@@ -625,6 +626,7 @@ public class Tokenizer
             string existingFile = File.ReadAllText(filePath);
             vocabulary = JsonConvert.DeserializeObject<Dictionary<string, int>>(existingFile) ?? new Dictionary<string, int>();
         }
+       
 
       
             string convopath = "C:\\Users\\brand\\OneDrive\\Desktop\\Neuralnetworktesting\\Neuralnetworktesting\\convo.txt";
@@ -767,7 +769,7 @@ public class Tokenizer
         return output;
 
     }
-    */
+    
 
 
     /*
