@@ -127,8 +127,14 @@ public class Tokenizer
     public static void Main()
     {
       
-
-
+        /*Basic token call:
+        Tokenizer tokenizer = new Tokenizer();
+        string input = "I am Ada";
+        List<int> encoded = tokenizer.Encode(input);
+        Console.WriteLine("Encoded: " + string.Join(", ", encoded));
+        string decoded = tokenizer.Decode(encoded);
+        Console.WriteLine("Decoded: " + decoded);
+        */
 
 
     }
